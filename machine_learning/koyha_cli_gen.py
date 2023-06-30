@@ -4,35 +4,30 @@ import config as cfg
 
 model_base = 'model name'
 train_on = 'model path' + model_base
-stagin_folder = 'C:/Diffusion_Training/'
-
+stagin_folder = 'C:/Diffusion_Embeddings'
+image_folder = ''
 def get_models(search=False):
     dirs = os.listdir(stagin_folder)
     model_dict = {}
     if search:
         image_folder = os.path.join(stagin_folder, parser.parse_args().model_name, f'image/{cfg.repeats}_{parser.parse_args().model_name}')
-        main_im_fldr = f'C:/Diffusion_Embeddings/{parser.parse_args().model_name}/image/'
-        model_folder = f'C:/Diffusion_Embeddings/{parser.parse_args().model_name}/model/'
-        log_folder = f'C:/Diffusion_Embeddings/{parser.parse_args().model_name}/log/'
-
-        # count images in image folder
+        main_im_fldr = f'{stagin_folder}/{parser.parse_args().model_name}/image/'
+        model_folder = f'{stagin_folder}/{parser.parse_args().model_name}/model/'
+        log_folder = f'{stagin_folder}/{parser.parse_args().model_name}/log/'
         images = len(os.listdir(image_folder))
         model_dict = {**model_dict, **build_command(parser.parse_args().model_name, main_im_fldr, model_folder, log_folder, cfg.resolution, cfg.repeats, images)}
     else:
         for model in dirs:
             image_folder = os.path.join(stagin_folder, model, f'image/{cfg.repeats}_{model}')
-            main_im_fldr = f'C:/Diffusion_Embeddings/{model}/image/'
-            model_folder = f'C:/Diffusion_Embeddings/{model}/model/'
-            log_folder = f'C:/Diffusion_Embeddings/{model}/log/'
-            # check if safetensors exists in model folder
+            main_im_fldr = f'{stagin_folder}/{model}/image/'
+            model_folder = f'{stagin_folder}/{model}/model/'
+            log_folder = f'{stagin_folder}/{model}/log/'
             if os.path.exists(os.path.join(model_folder, f'{model}.safetensors')):
                 print(f"Skipping {model} because has already been processed")
                 continue
-            # caption images
-            cmd = '.\venv\Scripts\python.exe "finetune/make_captions.py" --batch_size="3" --num_beams="5" --top_p="0.9" --max_length="75" --min_length="5" --beam_search --caption_extension=".txt" "C:/Diffusion_Embeddings/{model}/image/15_{model}" --caption_weights="https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model_large_caption.pth"'
+            cmd = f'.\venv\Scripts\python.exe "finetune/make_captions.py" --batch_size="3" --num_beams="5" --top_p="0.9" --max_length="75" --min_length="5" --beam_search --caption_extension=".txt" "{stagin_folder}/{model}/image/15_{model}" --caption_weights="https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model_large_caption.pth"'
             print("Captioning images...")
             os.system(cmd)
-            # count images in image folder
             images = len(os.listdir(image_folder))
             model_dict = {**model_dict, **build_command(model, main_im_fldr, model_folder, log_folder, cfg.resolution, cfg.repeats, images)}
 
@@ -54,6 +49,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_name',
                         type=str,
-                        default='eva elfie', required=False)
+                        default='', required=False)
     model = parser.parse_args().model_name
     main()
