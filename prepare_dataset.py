@@ -24,23 +24,15 @@ def resize_image(image_path, resolution):
     Returns:
         None
     """
-    # Open the image file using PIL
     with Image.open(image_path) as img:
-        # Resize the image to the given resolution
         return  img.resize(resolution)
-
 
 
 def resize_images(images: list, output_dir: str):
     for i,image in enumerate(images):
-        # load image and resize
         resized_img = resize_image(image, (cfg.resolution, cfg.resolution))
-        # caption image
         caption_text = blip_image_caption.caption_image(image)
-
-        # save image
         resized_img.save(os.path.join(image_dir, image.split("\\")[-1]))
-        # save caption
         print(image)
         caption_file = image.split('\\')[-1].split('.')[0] + ".txt"
         print(caption_file)
@@ -49,20 +41,18 @@ def resize_images(images: list, output_dir: str):
             file.close()
         os.remove(image)
 
-
-outdir = os.path.join(os.getcwd(), f"output/")
-for folder in os.listdir(outdir):
-    path = os.path.join(outdir, folder)
-    generate_lora_folder_structure(path)
-    image_dir = os.path.join(path, f"image/{cfg.repeats}_{folder}")
-    if os.path.exists(image_dir):
-        pass
-    else:
-        os.mkdir(image_dir)
-
-    # create folder structure
-    generate_lora_folder_structure(path)
-    # resize images
-    images = [os.path.join(path, image) for image in os.listdir(path) if image.endswith(".jpg")]
-    resize_images(images, image_dir)
+if __name__ == '__main__':
+    outdir = os.path.join(os.getcwd(), f"output/")
+    for folder in os.listdir(outdir):
+        path = os.path.join(outdir, folder)
+        generate_lora_folder_structure(path)
+        image_dir = os.path.join(path, f"image/{cfg.repeats}_{folder}")
+        if os.path.exists(image_dir):
+            pass
+        else:
+            os.mkdir(image_dir)
+    
+        generate_lora_folder_structure(path)
+        images = [os.path.join(path, image) for image in os.listdir(path) if image.endswith(".jpg")]
+        resize_images(images, image_dir)
 
