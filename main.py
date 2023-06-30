@@ -79,9 +79,9 @@ class Scrap4Diffusion:
         return hrefs
 
 
-source = {'name': 'instgram url handle'}
+sources = {'name': 'instgram url handle'}
 
 
-for x in source:
-    print(x, source[x])
-    scraper = Scrap4Diffusion(name=x, profile=source[x])
+for source in sources:
+    print(source, source[source])
+    scraper = Scrap4Diffusion(name=source, profile=sources[source])
