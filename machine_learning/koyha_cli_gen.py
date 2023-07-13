@@ -4,7 +4,7 @@ import config as cfg
 
 model_base = 'model name'
 train_on = 'model path' + model_base
-stagin_folder = 'C:/Diffusion_Embeddings'
+stagin_folder = ''
 image_folder = ''
 def get_models(search=False):
     dirs = os.listdir(stagin_folder)
