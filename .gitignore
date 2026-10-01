@@ -1,3 +1,23 @@
-**/__pychache__
-**/geckodriver.exe
-**/geckodriver.log
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pytest-tmp/
+.coverage
+
+# Datasets and model output are data, not source
+datasets/
+output/
+*.safetensors
+*.ckpt
+
+.idea/
+.vscode/
+.DS_Store
