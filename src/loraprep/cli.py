@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from . import __version__
-from .captions import BlipCaptioner, StubCaptioner
+from .captions import BlipCaptioner, Captioner, StubCaptioner
 from .config import TrainingConfig
 from .dataset import build_layout
 from .images import find_images
@@ -19,7 +19,13 @@ def _config(args: argparse.Namespace) -> TrainingConfig:
 
 
 def _cmd_prepare(args: argparse.Namespace) -> int:
-    captioner = StubCaptioner(args.caption) if args.no_model else BlipCaptioner()
+    # Declared then branched rather than a ternary: mypy joins the two concrete
+    # classes to `object` in a ternary, because neither inherits the Protocol.
+    captioner: Captioner
+    if args.no_model:
+        captioner = StubCaptioner(args.caption)
+    else:
+        captioner = BlipCaptioner()
     if args.no_model:
         print("captioning disabled (--no-model); using a fixed caption")
     else:

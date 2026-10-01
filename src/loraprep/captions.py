@@ -8,7 +8,7 @@ scope, which meant importing the module downloaded a model.
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Protocol
+from typing import Any, Protocol
 
 from PIL import Image
 
@@ -60,8 +60,10 @@ class BlipCaptioner:
         self.model_name = model_name
         self.prompt = prompt
         self.max_new_tokens = max_new_tokens
-        self._processor = None
-        self._model = None
+        # Any rather than the concrete types: transformers is an optional
+        # extra, so its names must not be needed to type-check the package.
+        self._processor: Any = None
+        self._model: Any = None
 
     def _load(self) -> None:
         if self._model is not None:
