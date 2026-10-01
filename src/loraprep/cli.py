@@ -19,10 +19,12 @@ def _config(args: argparse.Namespace) -> TrainingConfig:
 
 
 def _cmd_prepare(args: argparse.Namespace) -> int:
-    # Declared then branched rather than a ternary: mypy joins the two concrete
-    # classes to `object` in a ternary, because neither inherits the Protocol.
+    # ruff (SIM108) wants a ternary here; mypy rejects one, because it joins the
+    # two concrete classes to `object` - neither inherits the Protocol, they
+    # structurally satisfy it. Branching lets each arm be checked against the
+    # declared type. Type correctness wins over the style preference.
     captioner: Captioner
-    if args.no_model:
+    if args.no_model:  # noqa: SIM108
         captioner = StubCaptioner(args.caption)
     else:
         captioner = BlipCaptioner()
