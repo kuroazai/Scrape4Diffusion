@@ -35,7 +35,7 @@ dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.4", "mypy>=1.8"]
 loraprep = "loraprep.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/kuroazai/Scrape4Diffusion"
+Homepage = "https://github.com/kuroazai/loraprep"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/loraprep"]
